@@ -23,20 +23,25 @@ function youtubeId(url) {
   try {
     const u = new URL(url);
     if (u.hostname.includes("youtu.be")) return u.pathname.slice(1);
-    if (u.hostname.includes("youtube.com")) {
-      if (u.pathname.startsWith("/embed/")) return u.pathname.split("/embed/")[1];
-      return u.searchParams.get("v") || "";
-    }
+    if (u.hostname.includes("youtube.com")) return u.searchParams.get("v") || "";
   } catch {}
   return "";
+}
+
+function escapeHTML(s) {
+  return String(s).replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[c]));
+}
+function stripMarkdown(s) {
+  return String(s).replace(/[#*_`>]/g,"").replace(/\[([^\]]+)\]\([^)]+\)/g,"$1");
 }
 
 async function initSite() {
   const site = await loadJSON("data/site.json", {});
   if ($("#tagline")) $("#tagline").textContent = site.tagline || "MUSIC PRODUCER • COMPOSER • ARRANGER";
   if ($("#bio")) {
-    const bio = String(site.bio || "Welcome to my portfolio.");
-    $("#bio").innerHTML = bio.replace(/\n/g, "<br>");
+    $("#bio").innerHTML = String(site.bio || "Welcome to my portfolio.").replace(/\n/g, "<br>");
   }
   const hero = normalizePath(site.hero_image);
   if ($("#heroImage") && hero) {
@@ -50,40 +55,30 @@ async function initSite() {
 }
 
 async function loadCollection(dir) {
-  const index = await loadJSON(`data/${dir}/index.json`, null);
-  if (Array.isArray(index)) {
-    return Promise.all(index.map(item => loadJSON(`data/${dir}/${item}`, {})));
-  }
-  return [];
-}
-
-function imagePath(value) {
-  return normalizePath(value);
+  // GitHub Action generates these manifest files from the collection folders.
+  return await loadJSON(`data/${dir}/index.json`, []);
 }
 
 function card(item, kind = "") {
   const title = item.title || item.name || "Untitled";
-  const image = imagePath(item.cover || item.photo || item.image);
-  const year = item.year ? `<span class="meta">${item.year}</span>` : "";
-  const artist = typeof item.artist === "object" ? (item.artist.label || item.artist.value || "") : (item.artist || "");
+  const image = normalizePath(item.cover || item.photo || item.image);
+  const year = item.year ? `<span class="meta">${escapeHTML(item.year)}</span>` : "";
+  const artist = typeof item.artist === "object"
+    ? (item.artist.label || item.artist.value || "")
+    : (item.artist || "");
+
   return `<article class="card">
-    <div class="card-media">${image ? `<img src="${image}" alt="">` : `<span>NO IMAGE</span>`}</div>
+    <div class="card-media">${image ? `<img src="${escapeHTML(image)}" alt="">` : `<span>NO IMAGE</span>`}</div>
     <div class="card-body">
       ${year}
       <h3>${escapeHTML(title)}</h3>
       ${artist ? `<div class="meta">${escapeHTML(artist)}</div>` : ""}
       ${item.role ? `<span class="tag">${escapeHTML(item.role)}</span>` : ""}
-      ${item.description ? `<p>${stripMarkdown(String(item.description)).slice(0,180)}</p>` : ""}
-      ${kind === "song" && item.youtube ? `<a class="tag" href="${escapeAttr(item.youtube)}" target="_blank" rel="noopener">YouTube ↗</a>` : ""}
+      ${item.description ? `<p>${escapeHTML(stripMarkdown(item.description)).slice(0,180)}</p>` : ""}
+      ${kind === "song" && item.youtube ? `<a class="tag" href="${escapeHTML(item.youtube)}" target="_blank" rel="noopener">YouTube ↗</a>` : ""}
     </div>
   </article>`;
 }
-
-function escapeHTML(s) {
-  return s.replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[c]));
-}
-function escapeAttr(s) { return escapeHTML(s); }
-function stripMarkdown(s) { return s.replace(/[#*_`>]/g,"").replace(/\[([^\]]+)\]\([^)]+\)/g,"$1"); }
 
 async function initCatalog() {
   const container = $("#cards");
@@ -91,15 +86,23 @@ async function initCatalog() {
   const dir = container.dataset.dir;
   const kind = container.dataset.kind || "";
   const items = await loadCollection(dir);
+
   if (!items.length) {
     container.innerHTML = `<div class="empty">No entries yet. Add content in Pages CMS.</div>`;
     return;
   }
-  container.innerHTML = items.sort((a,b)=>(b.year||0)-(a.year||0)).map(x => card(x, kind)).join("");
+
+  container.innerHTML = items
+    .sort((a,b)=>(Number(b.year)||0)-(Number(a.year)||0))
+    .map(x => card(x, kind))
+    .join("");
+
   const search = $("#search");
   if (search) search.addEventListener("input", () => {
     const q = search.value.toLowerCase();
-    [...container.children].forEach(el => el.style.display = el.textContent.toLowerCase().includes(q) ? "" : "none");
+    [...container.children].forEach(el => {
+      el.style.display = el.textContent.toLowerCase().includes(q) ? "" : "none";
+    });
   });
 }
 
