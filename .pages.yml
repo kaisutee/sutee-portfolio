@@ -5,7 +5,7 @@ media:
 content:
 
   # =========================================================
-  # SITE
+  # SITE SETTINGS
   # =========================================================
 
   - name: site
@@ -15,6 +15,7 @@ content:
     format: json
     operations:
       delete: false
+
     fields:
 
       - name: name
@@ -26,13 +27,20 @@ content:
         label: Tagline
         type: string
 
-      - name: bio
-        label: Biography
-        type: rich-text
+      # รูปใหญ่หน้า Main Page
+      - name: hero_image
+        label: Main Page Cover
+        type: image
+        description: Main image displayed on the homepage
 
+      # รูป Profile
       - name: profile_image
         label: Profile Image
         type: image
+
+      - name: bio
+        label: Biography
+        type: rich-text
 
       - name: email
         label: Email
@@ -90,20 +98,6 @@ content:
             label: Website
             type: string
 
-        view:
-          fields:
-            - name
-            - website
-          primary: name
-          search:
-            - name
-            - biography
-          sort:
-            - name
-          default:
-            sort: name
-            order: asc
-
 
       # -------------------------------------------------------
       # ALBUMS
@@ -155,22 +149,6 @@ content:
           - name: apple_music
             label: Apple Music
             type: string
-
-        view:
-          fields:
-            - title
-            - artist
-            - year
-          primary: title
-          search:
-            - title
-            - artist
-          sort:
-            - year
-            - title
-          default:
-            sort: year
-            order: desc
 
 
       # -------------------------------------------------------
@@ -238,25 +216,6 @@ content:
             label: Credits
             type: text
 
-        view:
-          fields:
-            - title
-            - artist
-            - album
-            - year
-          primary: title
-          search:
-            - title
-            - artist
-            - album
-            - credits
-          sort:
-            - year
-            - title
-          default:
-            sort: year
-            order: desc
-
 
       # -------------------------------------------------------
       # SINGLES
@@ -308,22 +267,6 @@ content:
           - name: credits
             label: Credits
             type: text
-
-        view:
-          fields:
-            - title
-            - artist
-            - year
-          primary: title
-          search:
-            - title
-            - artist
-            - credits
-          sort:
-            - year
-          default:
-            sort: year
-            order: desc
 
 
   # =========================================================
@@ -386,24 +329,6 @@ content:
             label: Spotify
             type: string
 
-        view:
-          fields:
-            - title
-            - artist
-            - year
-            - role
-          primary: title
-          search:
-            - title
-            - artist
-            - role
-            - description
-          sort:
-            - year
-          default:
-            sort: year
-            order: desc
-
 
       # -------------------------------------------------------
       # COMPOSER
@@ -451,22 +376,6 @@ content:
           - name: credits
             label: Credits
             type: text
-
-        view:
-          fields:
-            - title
-            - artist
-            - year
-          primary: title
-          search:
-            - title
-            - artist
-            - credits
-          sort:
-            - year
-          default:
-            sort: year
-            order: desc
 
 
       # -------------------------------------------------------
@@ -516,25 +425,9 @@ content:
             label: Credits
             type: text
 
-        view:
-          fields:
-            - title
-            - artist
-            - year
-          primary: title
-          search:
-            - title
-            - artist
-            - credits
-          sort:
-            - year
-          default:
-            sort: year
-            order: desc
-
 
       # -------------------------------------------------------
-      # OTHER
+      # OTHER WORKS
       # -------------------------------------------------------
 
       - name: other
@@ -580,23 +473,6 @@ content:
             label: Project Link
             type: string
 
-        view:
-          fields:
-            - title
-            - artist
-            - year
-            - role
-          primary: title
-          search:
-            - title
-            - artist
-            - role
-          sort:
-            - year
-          default:
-            sort: year
-            order: desc
-
 
   # =========================================================
   # ARCHIVE
@@ -604,77 +480,54 @@ content:
 
   - name: archive
     label: ARCHIVE
-    type: group
-    items:
+    type: collection
+    path: data/archive
+    format: json
+    filename: "{primary}.json"
 
-      - name: archive
-        label: Archive
-        type: collection
-        path: data/archive
-        format: json
-        filename: "{primary}.json"
+    fields:
 
-        fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
 
-          - name: title
-            label: Title
-            type: string
-            required: true
+      - name: artist
+        label: Artist
+        type: string
 
-          - name: artist
-            label: Artist
-            type: string
+      - name: year
+        label: Year
+        type: number
 
-          - name: year
-            label: Year
-            type: number
+      - name: type
+        label: Type
+        type: select
+        options:
+          values:
+            - Album
+            - Single
+            - Compilation
+            - Production
+            - Composition
+            - Arrangement
+            - Other
 
-          - name: type
-            label: Type
-            type: select
-            options:
-              values:
-                - Album
-                - Single
-                - Compilation
-                - Production
-                - Composition
-                - Arrangement
-                - Other
+      - name: cover
+        label: Artwork
+        type: image
 
-          - name: cover
-            label: Artwork
-            type: image
+      - name: description
+        label: Description
+        type: rich-text
 
-          - name: description
-            label: Description
-            type: rich-text
+      - name: youtube
+        label: YouTube
+        type: string
 
-          - name: youtube
-            label: YouTube
-            type: string
-
-          - name: notes
-            label: Archive Notes
-            type: text
-
-        view:
-          fields:
-            - title
-            - artist
-            - year
-            - type
-          primary: title
-          search:
-            - title
-            - artist
-            - type
-            - notes
-          sort:
-            - year
-          default:
-            sort: year
-            order: desc
+      - name: notes
+        label: Archive Notes
+        type: text
 
 
   # =========================================================
@@ -706,20 +559,6 @@ content:
       - name: description
         label: Description
         type: text
-
-    view:
-      fields:
-        - title
-        - year
-      primary: title
-      search:
-        - title
-        - description
-      sort:
-        - year
-      default:
-        sort: year
-        order: desc
 
 
 settings:
