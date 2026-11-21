@@ -45,9 +45,12 @@ async function initSite() {
   }
   const hero = normalizePath(site.hero_image);
   if ($("#heroImage") && hero) {
-    $("#heroImage").style.backgroundImage = `url("${hero}")`;
-    $("#heroImage").classList.add("has-image");
-  }
+  $("#heroImage").style.backgroundImage = `url('${hero}')`;
+  $("#heroImage").style.backgroundSize = "cover";
+  $("#heroImage").style.backgroundPosition = "center center";
+  $("#heroImage").style.backgroundRepeat = "no-repeat";
+  $("#heroImage").classList.add("has-image");
+}
   if ($("#year")) $("#year").textContent = new Date().getFullYear();
 
   const toggle = $(".nav-toggle");
