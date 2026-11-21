@@ -55,9 +55,34 @@ async function initSite() {
     site.tagline || "MUSIC PRODUCER • COMPOSER • ARRANGER"
   ).trim();
 
+  // Site Settings controls the entire editable Hero:
+  // hero_title, tagline, bio, and both CTA labels/links.
+  const heroTitle = String(site.hero_title || name).trim();
+  const primaryLabel = String(site.hero_primary_label || "▷ Explore Music").trim();
+  const primaryUrl = String(site.hero_primary_url || "music.html").trim();
+  const secondaryLabel = String(site.hero_secondary_label || "View Works").trim();
+  const secondaryUrl = String(site.hero_secondary_url || "works.html").trim();
+
   if ($("#siteName")) $("#siteName").textContent = name;
   if ($("#footerName")) $("#footerName").textContent = name;
   if ($("#footerTagline")) $("#footerTagline").textContent = tagline;
+  if ($("#heroTitle")) $("#heroTitle").textContent = heroTitle;
+  if ($("#heroTagline")) $("#heroTagline").textContent = tagline;
+
+  const bio = String(
+    site.bio || "Welcome to my portfolio.\nMusic, production, compositions\nand selected works."
+  );
+  if ($("#heroBio")) $("#heroBio").innerHTML = escapeHTML(bio).replace(/\\n/g, "<br>");
+
+  if ($("#heroPrimaryButton")) {
+    $("#heroPrimaryButton").textContent = primaryLabel;
+    $("#heroPrimaryButton").href = primaryUrl;
+  }
+  if ($("#heroSecondaryButton")) {
+    $("#heroSecondaryButton").textContent = secondaryLabel;
+    $("#heroSecondaryButton").href = secondaryUrl;
+  }
+
   document.title = `${name} — ${tagline}`;
 
   // Site Settings > Main Page Cover controls the HOME image.
