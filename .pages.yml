@@ -31,12 +31,16 @@ content:
       - name: hero_image
         label: Main Page Cover
         type: image
+        options:
+          path: public/media
         description: Main image displayed on the homepage
 
       # รูป Profile
       - name: profile_image
         label: Profile Image
         type: image
+        options:
+          path: public/media
 
       - name: bio
         label: Biography
