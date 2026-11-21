@@ -143,8 +143,8 @@ h1{font-size:52px;line-height:1.05;margin:12px 0 18px}
   padding: 0 40px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  text-align: center;
+  justify-content: flex-start;
+  text-align: left;
 }
 
 .hero-copy {
@@ -164,7 +164,7 @@ h1{font-size:52px;line-height:1.05;margin:12px 0 18px}
   height: 3px;
   background: var(--accent);
   transform: skewX(-20deg);
-  margin: 18px auto 26px;
+  margin: 18px 0 26px 110px;
 }
 
 .hero p {
@@ -178,7 +178,7 @@ h1{font-size:52px;line-height:1.05;margin:12px 0 18px}
 .actions {
   display: flex;
   gap: 14px;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .btn {
@@ -221,18 +221,28 @@ h1{font-size:52px;line-height:1.05;margin:12px 0 18px}
   }
 }
 
-/* Editable Hero title */
-.hero-title {
-  font-family: "Brush Script MT", "Segoe Script", "Snell Roundhand", cursive;
-  font-size: clamp(64px, 8vw, 112px);
-  line-height: .9;
-  color: #fff;
-  font-style: italic;
-  text-shadow: 0 4px 24px rgba(0,0,0,.45);
-  margin-bottom: 18px;
+/* HERO TEXT — original left-side placement */
+.hero-content {
+  padding-left: 7.5vw;
+  padding-right: 7.5vw;
 }
+
+.hero-copy {
+  text-align: left;
+}
+
 @media (max-width: 700px) {
-  .hero-title {
-    font-size: clamp(48px, 16vw, 78px);
+  .hero-content {
+    padding-left: 25px;
+    padding-right: 25px;
+    justify-content: flex-start;
+  }
+
+  .hero-copy {
+    max-width: 100%;
+  }
+
+  .hero .accent-line {
+    margin-left: 70px;
   }
 }
