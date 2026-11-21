@@ -1,79 +1,76 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sutee — Music Producer</title>
-
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            background: #0b0b0b;
-            color: #ffffff;
-            font-family: Arial, sans-serif;
-        }
-
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 40px;
-        }
-
-        .hero h1 {
-            font-size: clamp(60px, 12vw, 160px);
-            letter-spacing: 0.08em;
-            font-weight: 300;
-        }
-
-        .hero p {
-            margin-top: 20px;
-            font-size: 18px;
-            letter-spacing: 0.25em;
-            color: #999;
-        }
-
-        .enter {
-            display: inline-block;
-            margin-top: 50px;
-            padding: 14px 32px;
-            border: 1px solid #555;
-            color: white;
-            text-decoration: none;
-            transition: 0.3s;
-        }
-
-        .enter:hover {
-            background: white;
-            color: black;
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Kaisutee — Music Producer, Composer and Arranger">
+  <title>Kaisutee Portfolio</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
+  <header class="nav">
+    <a class="brand" href="#top">KAISUTEE</a>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#music">Music</a>
+      <a href="#works">Works</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
 
+  <main id="top">
     <section class="hero">
-
-        <div>
-            <h1>SUTEE</h1>
-
-            <p>
-                MUSIC PRODUCER · COMPOSER · ARRANGER
-            </p>
-
-            <a href="#" class="enter">
-                ENTER PORTFOLIO
-            </a>
+      <div class="hero-inner">
+        <p class="eyebrow">MUSIC • PRODUCTION • COMPOSITION</p>
+        <h1 id="heroName">Kaisutee</h1>
+        <p class="tagline" id="heroTagline">Music Producer • Composer • Arranger</p>
+        <p class="intro" id="heroBio"></p>
+        <div class="buttons">
+          <a href="#music" class="button">Explore Music</a>
+          <a href="#works" class="button ghost">Selected Works</a>
         </div>
-
+      </div>
     </section>
 
+    <section id="about" class="section narrow">
+      <p class="section-kicker">ABOUT</p>
+      <h2>Music is the work.</h2>
+      <p id="aboutBio" class="large-copy"></p>
+    </section>
+
+    <section id="music" class="section">
+      <div class="section-head">
+        <div>
+          <p class="section-kicker">MUSIC</p>
+          <h2>Selected Music</h2>
+        </div>
+      </div>
+      <div id="musicGrid" class="grid"></div>
+    </section>
+
+    <section id="works" class="section alt">
+      <div class="section-head">
+        <div>
+          <p class="section-kicker">WORKS</p>
+          <h2>Selected Works</h2>
+        </div>
+      </div>
+      <div id="worksGrid" class="grid"></div>
+    </section>
+
+    <section id="contact" class="section contact">
+      <p class="section-kicker">CONTACT</p>
+      <h2>Let's make something.</h2>
+      <a id="emailLink" class="contact-link" href="#">Contact Kaisutee</a>
+      <div id="socials" class="socials"></div>
+    </section>
+  </main>
+
+  <footer>
+    <span>© <span id="year"></span> Kaisutee</span>
+    <span>Music Producer • Composer • Arranger</span>
+  </footer>
+
+  <script src="app.js"></script>
 </body>
 </html>
