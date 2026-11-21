@@ -3,6 +3,7 @@ media:
   output: /media
 
 content:
+
   - name: site
     label: Site Settings
     type: file
@@ -12,9 +13,11 @@ content:
       - name: name
         label: Name
         type: string
+
       - name: bio
         label: Bio
         type: rich-text
+
       - name: profile_image
         label: Profile Image
         type: image
@@ -24,50 +27,70 @@ content:
     type: collection
     path: data/music
     format: json
+    filename: "{title}.json"
     fields:
       - name: title
         label: Song Title
         type: string
+        required: true
+
       - name: artist
         label: Artist
         type: string
+
       - name: album
         label: Album
         type: string
+
       - name: year
         label: Year
         type: number
+
       - name: cover
-        label: Cover
+        label: Cover Image
         type: image
-      - name: audio
-        label: Audio
-        type: file
+
+      - name: youtube
+        label: YouTube URL
+        type: string
+        description: Paste the YouTube link for this song
+
       - name: description
         label: Description
         type: rich-text
+
+      - name: credits
+        label: Credits
+        type: text
 
   - name: works
     label: Works & Credits
     type: collection
     path: data/works
     format: json
+    filename: "{title}.json"
     fields:
       - name: title
         label: Project / Album
         type: string
+        required: true
+
       - name: artist
         label: Artist
         type: string
+
       - name: year
         label: Year
         type: number
+
       - name: role
         label: Role
         type: string
+
       - name: cover
-        label: Cover
+        label: Cover Image
         type: image
+
       - name: description
         label: Description
         type: rich-text
@@ -77,13 +100,16 @@ content:
     type: collection
     path: data/gallery
     format: json
+    filename: "{title}.json"
     fields:
       - name: title
         label: Title
         type: string
+
       - name: image
         label: Image
         type: image
+
       - name: description
         label: Description
         type: rich-text
