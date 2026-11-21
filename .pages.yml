@@ -4,112 +4,733 @@ media:
 
 content:
 
+  # =========================================================
+  # SITE
+  # =========================================================
+
   - name: site
     label: Site Settings
     type: file
     path: data/site.json
     format: json
+    operations:
+      delete: false
     fields:
+
       - name: name
         label: Name
         type: string
+        required: true
+
+      - name: tagline
+        label: Tagline
+        type: string
 
       - name: bio
-        label: Bio
+        label: Biography
         type: rich-text
 
       - name: profile_image
         label: Profile Image
         type: image
 
-  - name: music
-    label: Music
-    type: collection
-    path: data/music
-    format: json
-    filename: "{title}.json"
-    fields:
-      - name: title
-        label: Song Title
-        type: string
-        required: true
-
-      - name: artist
-        label: Artist
+      - name: email
+        label: Email
         type: string
 
-      - name: album
-        label: Album
+      - name: facebook
+        label: Facebook
         type: string
 
-      - name: year
-        label: Year
-        type: number
-
-      - name: cover
-        label: Cover Image
-        type: image
+      - name: instagram
+        label: Instagram
+        type: string
 
       - name: youtube
-        label: YouTube URL
+        label: YouTube
         type: string
-        description: Paste the YouTube link for this song
 
-      - name: description
-        label: Description
-        type: rich-text
 
-      - name: credits
-        label: Credits
-        type: text
+  # =========================================================
+  # MUSIC
+  # =========================================================
+
+  - name: music
+    label: MUSIC
+    type: group
+    items:
+
+      # -------------------------------------------------------
+      # ARTISTS
+      # -------------------------------------------------------
+
+      - name: artists
+        label: Artists
+        type: collection
+        path: data/artists
+        format: json
+        filename: "{primary}.json"
+
+        fields:
+
+          - name: name
+            label: Artist Name
+            type: string
+            required: true
+
+          - name: photo
+            label: Artist Photo
+            type: image
+
+          - name: biography
+            label: Biography
+            type: rich-text
+
+          - name: website
+            label: Website
+            type: string
+
+        view:
+          fields:
+            - name
+            - website
+          primary: name
+          search:
+            - name
+            - biography
+          sort:
+            - name
+          default:
+            sort: name
+            order: asc
+
+
+      # -------------------------------------------------------
+      # ALBUMS
+      # -------------------------------------------------------
+
+      - name: albums
+        label: Albums
+        type: collection
+        path: data/albums
+        format: json
+        filename: "{primary}.json"
+
+        fields:
+
+          - name: title
+            label: Album Title
+            type: string
+            required: true
+
+          - name: artist
+            label: Artist
+            type: reference
+            options:
+              collection: artists
+              search: "name"
+              label: "{primary}"
+              value: "{path}"
+
+          - name: year
+            label: Release Year
+            type: number
+
+          - name: cover
+            label: Cover Artwork
+            type: image
+
+          - name: description
+            label: Album Description
+            type: rich-text
+
+          - name: youtube
+            label: YouTube
+            type: string
+
+          - name: spotify
+            label: Spotify
+            type: string
+
+          - name: apple_music
+            label: Apple Music
+            type: string
+
+        view:
+          fields:
+            - title
+            - artist
+            - year
+          primary: title
+          search:
+            - title
+            - artist
+          sort:
+            - year
+            - title
+          default:
+            sort: year
+            order: desc
+
+
+      # -------------------------------------------------------
+      # SONGS
+      # -------------------------------------------------------
+
+      - name: songs
+        label: Songs
+        type: collection
+        path: data/songs
+        format: json
+        filename: "{primary}.json"
+
+        fields:
+
+          - name: title
+            label: Song Title
+            type: string
+            required: true
+
+          - name: artist
+            label: Artist
+            type: reference
+            options:
+              collection: artists
+              search: "name"
+              label: "{primary}"
+              value: "{path}"
+
+          - name: album
+            label: Album
+            type: reference
+            options:
+              collection: albums
+              search: "title"
+              label: "{primary}"
+              value: "{path}"
+
+          - name: year
+            label: Release Year
+            type: number
+
+          - name: cover
+            label: Cover Artwork
+            type: image
+
+          - name: youtube
+            label: YouTube URL
+            type: string
+            description: Paste the YouTube URL for this song
+
+          - name: spotify
+            label: Spotify URL
+            type: string
+
+          - name: apple_music
+            label: Apple Music URL
+            type: string
+
+          - name: description
+            label: Description
+            type: rich-text
+
+          - name: credits
+            label: Credits
+            type: text
+
+        view:
+          fields:
+            - title
+            - artist
+            - album
+            - year
+          primary: title
+          search:
+            - title
+            - artist
+            - album
+            - credits
+          sort:
+            - year
+            - title
+          default:
+            sort: year
+            order: desc
+
+
+      # -------------------------------------------------------
+      # SINGLES
+      # -------------------------------------------------------
+
+      - name: singles
+        label: Singles
+        type: collection
+        path: data/singles
+        format: json
+        filename: "{primary}.json"
+
+        fields:
+
+          - name: title
+            label: Single Title
+            type: string
+            required: true
+
+          - name: artist
+            label: Artist
+            type: reference
+            options:
+              collection: artists
+              search: "name"
+              label: "{primary}"
+              value: "{path}"
+
+          - name: year
+            label: Release Year
+            type: number
+
+          - name: cover
+            label: Cover Artwork
+            type: image
+
+          - name: youtube
+            label: YouTube URL
+            type: string
+
+          - name: spotify
+            label: Spotify URL
+            type: string
+
+          - name: description
+            label: Description
+            type: rich-text
+
+          - name: credits
+            label: Credits
+            type: text
+
+        view:
+          fields:
+            - title
+            - artist
+            - year
+          primary: title
+          search:
+            - title
+            - artist
+            - credits
+          sort:
+            - year
+          default:
+            sort: year
+            order: desc
+
+
+  # =========================================================
+  # WORKS
+  # =========================================================
 
   - name: works
-    label: Works & Credits
-    type: collection
-    path: data/works
-    format: json
-    filename: "{title}.json"
-    fields:
-      - name: title
-        label: Project / Album
-        type: string
-        required: true
+    label: WORKS
+    type: group
+    items:
 
-      - name: artist
-        label: Artist
-        type: string
+      # -------------------------------------------------------
+      # PRODUCER
+      # -------------------------------------------------------
 
-      - name: year
-        label: Year
-        type: number
+      - name: producer
+        label: Producer
+        type: collection
+        path: data/works/producer
+        format: json
+        filename: "{primary}.json"
 
-      - name: role
-        label: Role
-        type: string
+        fields:
 
-      - name: cover
-        label: Cover Image
-        type: image
+          - name: title
+            label: Project / Album
+            type: string
+            required: true
 
-      - name: description
-        label: Description
-        type: rich-text
+          - name: artist
+            label: Artist
+            type: reference
+            options:
+              collection: artists
+              search: "name"
+              label: "{primary}"
+              value: "{path}"
+
+          - name: year
+            label: Year
+            type: number
+
+          - name: role
+            label: Role
+            type: string
+
+          - name: cover
+            label: Artwork
+            type: image
+
+          - name: description
+            label: Description
+            type: rich-text
+
+          - name: youtube
+            label: YouTube
+            type: string
+
+          - name: spotify
+            label: Spotify
+            type: string
+
+        view:
+          fields:
+            - title
+            - artist
+            - year
+            - role
+          primary: title
+          search:
+            - title
+            - artist
+            - role
+            - description
+          sort:
+            - year
+          default:
+            sort: year
+            order: desc
+
+
+      # -------------------------------------------------------
+      # COMPOSER
+      # -------------------------------------------------------
+
+      - name: composer
+        label: Composer
+        type: collection
+        path: data/works/composer
+        format: json
+        filename: "{primary}.json"
+
+        fields:
+
+          - name: title
+            label: Project / Song
+            type: string
+            required: true
+
+          - name: artist
+            label: Artist
+            type: reference
+            options:
+              collection: artists
+              search: "name"
+              label: "{primary}"
+              value: "{path}"
+
+          - name: year
+            label: Year
+            type: number
+
+          - name: cover
+            label: Artwork
+            type: image
+
+          - name: description
+            label: Description
+            type: rich-text
+
+          - name: youtube
+            label: YouTube
+            type: string
+
+          - name: credits
+            label: Credits
+            type: text
+
+        view:
+          fields:
+            - title
+            - artist
+            - year
+          primary: title
+          search:
+            - title
+            - artist
+            - credits
+          sort:
+            - year
+          default:
+            sort: year
+            order: desc
+
+
+      # -------------------------------------------------------
+      # ARRANGER
+      # -------------------------------------------------------
+
+      - name: arranger
+        label: Arranger
+        type: collection
+        path: data/works/arranger
+        format: json
+        filename: "{primary}.json"
+
+        fields:
+
+          - name: title
+            label: Project / Song
+            type: string
+            required: true
+
+          - name: artist
+            label: Artist
+            type: reference
+            options:
+              collection: artists
+              search: "name"
+              label: "{primary}"
+              value: "{path}"
+
+          - name: year
+            label: Year
+            type: number
+
+          - name: cover
+            label: Artwork
+            type: image
+
+          - name: description
+            label: Description
+            type: rich-text
+
+          - name: youtube
+            label: YouTube
+            type: string
+
+          - name: credits
+            label: Credits
+            type: text
+
+        view:
+          fields:
+            - title
+            - artist
+            - year
+          primary: title
+          search:
+            - title
+            - artist
+            - credits
+          sort:
+            - year
+          default:
+            sort: year
+            order: desc
+
+
+      # -------------------------------------------------------
+      # OTHER
+      # -------------------------------------------------------
+
+      - name: other
+        label: Other Works
+        type: collection
+        path: data/works/other
+        format: json
+        filename: "{primary}.json"
+
+        fields:
+
+          - name: title
+            label: Project Title
+            type: string
+            required: true
+
+          - name: artist
+            label: Artist
+            type: reference
+            options:
+              collection: artists
+              search: "name"
+              label: "{primary}"
+              value: "{path}"
+
+          - name: year
+            label: Year
+            type: number
+
+          - name: role
+            label: Role
+            type: string
+
+          - name: cover
+            label: Artwork
+            type: image
+
+          - name: description
+            label: Description
+            type: rich-text
+
+          - name: link
+            label: Project Link
+            type: string
+
+        view:
+          fields:
+            - title
+            - artist
+            - year
+            - role
+          primary: title
+          search:
+            - title
+            - artist
+            - role
+          sort:
+            - year
+          default:
+            sort: year
+            order: desc
+
+
+  # =========================================================
+  # ARCHIVE
+  # =========================================================
+
+  - name: archive
+    label: ARCHIVE
+    type: group
+    items:
+
+      - name: archive
+        label: Archive
+        type: collection
+        path: data/archive
+        format: json
+        filename: "{primary}.json"
+
+        fields:
+
+          - name: title
+            label: Title
+            type: string
+            required: true
+
+          - name: artist
+            label: Artist
+            type: string
+
+          - name: year
+            label: Year
+            type: number
+
+          - name: type
+            label: Type
+            type: select
+            options:
+              values:
+                - Album
+                - Single
+                - Compilation
+                - Production
+                - Composition
+                - Arrangement
+                - Other
+
+          - name: cover
+            label: Artwork
+            type: image
+
+          - name: description
+            label: Description
+            type: rich-text
+
+          - name: youtube
+            label: YouTube
+            type: string
+
+          - name: notes
+            label: Archive Notes
+            type: text
+
+        view:
+          fields:
+            - title
+            - artist
+            - year
+            - type
+          primary: title
+          search:
+            - title
+            - artist
+            - type
+            - notes
+          sort:
+            - year
+          default:
+            sort: year
+            order: desc
+
+
+  # =========================================================
+  # GALLERY
+  # =========================================================
 
   - name: gallery
-    label: Gallery
+    label: GALLERY
     type: collection
     path: data/gallery
     format: json
-    filename: "{title}.json"
+    filename: "{primary}.json"
+
     fields:
+
       - name: title
         label: Title
         type: string
+        required: true
 
       - name: image
         label: Image
         type: image
 
+      - name: year
+        label: Year
+        type: number
+
       - name: description
         label: Description
-        type: rich-text
+        type: text
+
+    view:
+      fields:
+        - title
+        - year
+      primary: title
+      search:
+        - title
+        - description
+      sort:
+        - year
+      default:
+        sort: year
+        order: desc
+
+
+settings:
+  content:
+    merge: true
+
+  commit:
+    identity: app
+
+    templates:
+      create: "Add {path}"
+      update: "Update {path}"
+      delete: "Delete {path}"
+      rename: "Rename {oldPath} to {newPath}"
