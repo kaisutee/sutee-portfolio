@@ -1,0 +1,7 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Contact — Kaisutee</title><link rel="stylesheet" href="styles.css"></head><body>
+<header class="site-header"><a class="brand" href="index.html">KAISUTEE</a><button class="nav-toggle">☰</button><nav class="nav"><a href="index.html">HOME</a><a href="music.html">MUSIC</a><a href="works.html">WORKS</a><a href="archive.html">ARCHIVE</a><a href="gallery.html">GALLERY</a><a href="about.html">ABOUT</a><a class="active" href="contact.html">CONTACT</a></nav></header>
+<main><section class="page-hero"><span class="section-kicker">CONTACT</span><h1>Get in touch</h1><p>Contact information is managed from Site Settings in Pages CMS.</p></section><section class="detail"><p class="lead" id="contactInfo">Loading…</p></section></main>
+<footer class="footer"><div>© <span id="year"></span> Kaisutee</div><div>Music Producer • Composer • Arranger</div></footer>
+<script src="app.js"></script><script>
+document.addEventListener("DOMContentLoaded", async()=>{const s=await loadJSON("data/site.json",{}); const links=[]; if(s.email)links.push("Email: "+s.email); if(s.facebook)links.push("Facebook: "+s.facebook); if(s.instagram)links.push("Instagram: "+s.instagram); if(s.youtube)links.push("YouTube: "+s.youtube); document.getElementById("contactInfo").innerHTML=links.length?links.map(x=>escapeHTML(x)).join("<br>"):"Add contact details in Site Settings.";});
+</script></body></html>

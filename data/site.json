@@ -1,7 +1,11 @@
 {
   "name": "Kaisutee",
-  "title": "Kaisutee — Music Producer / Composer / Arranger",
   "tagline": "Music Producer • Composer • Arranger",
+  "hero_image": "",
+  "profile_image": "",
   "bio": "Welcome to my portfolio. Music, production, compositions and selected works.",
-  "hero_image": "/media/Kaisutee Studio Portfolio Hero.png"
+  "email": "",
+  "facebook": "",
+  "instagram": "",
+  "youtube": ""
 }

@@ -1,76 +1,72 @@
 <!doctype html>
-<html lang="th">
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Kaisutee — Music Producer, Composer and Arranger">
-  <title>Kaisutee Portfolio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kaisutee — Music Producer • Composer • Arranger</title>
+  <meta name="description" content="Kaisutee — Music Producer, Composer and Arranger.">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="nav">
-    <a class="brand" href="#top">KAISUTEE</a>
-    <nav>
-      <a href="#about">About</a>
-      <a href="#music">Music</a>
-      <a href="#works">Works</a>
-      <a href="#contact">Contact</a>
+<div id="app">
+  <header class="site-header">
+    <a class="brand" href="index.html">KAISUTEE</a>
+    <button class="nav-toggle" aria-label="Open menu">☰</button>
+    <nav class="nav">
+      <a class="active" href="index.html">HOME</a>
+      <a href="music.html">MUSIC</a>
+      <a href="works.html">WORKS</a>
+      <a href="archive.html">ARCHIVE</a>
+      <a href="gallery.html">GALLERY</a>
+      <a href="about.html">ABOUT</a>
+      <a href="contact.html">CONTACT</a>
     </nav>
   </header>
 
-  <main id="top">
-    <section class="hero">
-      <div class="hero-inner">
-        <p class="eyebrow">MUSIC • PRODUCTION • COMPOSITION</p>
-        <h1 id="heroName">Kaisutee</h1>
-        <p class="tagline" id="heroTagline">Music Producer • Composer • Arranger</p>
-        <p class="intro" id="heroBio"></p>
-        <div class="buttons">
-          <a href="#music" class="button">Explore Music</a>
-          <a href="#works" class="button ghost">Selected Works</a>
+  <main>
+    <section class="hero" id="hero">
+      <div class="hero-image" id="heroImage"></div>
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <div class="hero-copy">
+          <div class="script">Kaisutee</div>
+          <div class="accent-line"></div>
+          <div class="eyebrow" id="tagline">MUSIC PRODUCER • COMPOSER • ARRANGER</div>
+          <p id="bio">Welcome to my portfolio.<br>Music, production, compositions<br>and selected works.</p>
+          <div class="actions">
+            <a class="btn primary" href="music.html">▷ &nbsp;Explore Music</a>
+            <a class="btn secondary" href="works.html">View Works</a>
+          </div>
         </div>
       </div>
     </section>
 
-    <section id="about" class="section narrow">
-      <p class="section-kicker">ABOUT</p>
-      <h2>Music is the work.</h2>
-      <p id="aboutBio" class="large-copy"></p>
+    <section class="quick-links">
+      <a href="music.html"><span class="icon">◉</span><span><b>Music</b><small>Albums • Songs • Singles</small></span></a>
+      <a href="works.html"><span class="icon">☷</span><span><b>Works</b><small>Producer • Composer • Arranger</small></span></a>
+      <a href="archive.html"><span class="icon">◇</span><span><b>Archive</b><small>Selected Projects</small></span></a>
+      <a href="gallery.html"><span class="icon">▧</span><span><b>Gallery</b><small>Photos • Studio • Events</small></span></a>
     </section>
 
-    <section id="music" class="section">
+    <section class="section intro">
       <div class="section-head">
-        <div>
-          <p class="section-kicker">MUSIC</p>
-          <h2>Selected Music</h2>
-        </div>
+        <span class="section-kicker">SELECTED</span>
+        <h1>Music &amp; Works</h1>
+        <p>A growing catalog of music, production, composition and arrangement.</p>
       </div>
-      <div id="musicGrid" class="grid"></div>
-    </section>
-
-    <section id="works" class="section alt">
-      <div class="section-head">
-        <div>
-          <p class="section-kicker">WORKS</p>
-          <h2>Selected Works</h2>
-        </div>
+      <div class="feature-grid">
+        <a class="feature-card" href="music.html"><span>01</span><h2>Music</h2><p>Albums, songs and singles.</p></a>
+        <a class="feature-card" href="works.html"><span>02</span><h2>Works</h2><p>Production, composition and arrangement.</p></a>
+        <a class="feature-card" href="archive.html"><span>03</span><h2>Archive</h2><p>Selected projects from the catalog.</p></a>
       </div>
-      <div id="worksGrid" class="grid"></div>
-    </section>
-
-    <section id="contact" class="section contact">
-      <p class="section-kicker">CONTACT</p>
-      <h2>Let's make something.</h2>
-      <a id="emailLink" class="contact-link" href="#">Contact Kaisutee</a>
-      <div id="socials" class="socials"></div>
     </section>
   </main>
 
-  <footer>
-    <span>© <span id="year"></span> Kaisutee</span>
-    <span>Music Producer • Composer • Arranger</span>
+  <footer class="footer">
+    <div>© <span id="year"></span> Kaisutee</div>
+    <div>Music Producer • Composer • Arranger</div>
   </footer>
-
-  <script src="app.js"></script>
+</div>
+<script src="app.js"></script>
 </body>
 </html>

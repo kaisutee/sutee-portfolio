@@ -1,61 +1,109 @@
-async function loadJSON(url){const r=await fetch(url); if(!r.ok) throw new Error(url); return r.json();}
-async function loadCollection(path){
-  const manifest = await fetch(path + "/index.json").catch(()=>null);
-  if(manifest && manifest.ok) return manifest.json();
+const $ = (s) => document.querySelector(s);
+
+async function loadJSON(path, fallback = {}) {
+  try {
+    const res = await fetch(path, { cache: "no-store" });
+    if (!res.ok) throw new Error(`${res.status} ${path}`);
+    return await res.json();
+  } catch (e) {
+    console.warn("Could not load", path, e);
+    return fallback;
+  }
+}
+
+function normalizePath(value) {
+  if (!value) return "";
+  if (typeof value === "string") return value;
+  if (typeof value === "object") return value.path || value.value || value.url || "";
+  return "";
+}
+
+function youtubeId(url) {
+  if (!url) return "";
+  try {
+    const u = new URL(url);
+    if (u.hostname.includes("youtu.be")) return u.pathname.slice(1);
+    if (u.hostname.includes("youtube.com")) {
+      if (u.pathname.startsWith("/embed/")) return u.pathname.split("/embed/")[1];
+      return u.searchParams.get("v") || "";
+    }
+  } catch {}
+  return "";
+}
+
+async function initSite() {
+  const site = await loadJSON("data/site.json", {});
+  if ($("#tagline")) $("#tagline").textContent = site.tagline || "MUSIC PRODUCER • COMPOSER • ARRANGER";
+  if ($("#bio")) {
+    const bio = String(site.bio || "Welcome to my portfolio.");
+    $("#bio").innerHTML = bio.replace(/\n/g, "<br>");
+  }
+  const hero = normalizePath(site.hero_image);
+  if ($("#heroImage") && hero) {
+    $("#heroImage").style.backgroundImage = `url("${hero}")`;
+    $("#heroImage").classList.add("has-image");
+  }
+  if ($("#year")) $("#year").textContent = new Date().getFullYear();
+
+  const toggle = $(".nav-toggle");
+  if (toggle) toggle.addEventListener("click", () => $(".nav")?.classList.toggle("open"));
+}
+
+async function loadCollection(dir) {
+  const index = await loadJSON(`data/${dir}/index.json`, null);
+  if (Array.isArray(index)) {
+    return Promise.all(index.map(item => loadJSON(`data/${dir}/${item}`, {})));
+  }
   return [];
 }
-function esc(v=""){return String(v).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
-function media(url, fallback=""){
-  return url ? `<img src="${esc(url)}" alt="">` : `<span>${esc(fallback)}</span>`;
+
+function imagePath(value) {
+  return normalizePath(value);
 }
-function card(item, type){
-  const meta=[item.year,item.category || item.artist].filter(Boolean).join(" • ");
-  const links=[];
-  if(item.audio) links.push(`<a href="${esc(item.audio)}" target="_blank" rel="noopener">Audio</a>`);
-  if(item.spotify) links.push(`<a href="${esc(item.spotify)}" target="_blank" rel="noopener">Spotify</a>`);
-  if(item.youtube) links.push(`<a href="${esc(item.youtube)}" target="_blank" rel="noopener">YouTube</a>`);
-  if(item.link) links.push(`<a href="${esc(item.link)}" target="_blank" rel="noopener">View</a>`);
+
+function card(item, kind = "") {
+  const title = item.title || item.name || "Untitled";
+  const image = imagePath(item.cover || item.photo || item.image);
+  const year = item.year ? `<span class="meta">${item.year}</span>` : "";
+  const artist = typeof item.artist === "object" ? (item.artist.label || item.artist.value || "") : (item.artist || "");
   return `<article class="card">
-    <div class="card-media">${media(item.cover || item.image, type==="music" ? "MUSIC" : "WORK")}</div>
+    <div class="card-media">${image ? `<img src="${image}" alt="">` : `<span>NO IMAGE</span>`}</div>
     <div class="card-body">
-      <div class="meta">${esc(meta)}</div>
-      <h3>${esc(item.title)}</h3>
-      ${item.role ? `<p>${esc(item.role)}</p>` : ""}
-      ${item.description ? `<p style="margin-top:10px">${esc(item.description)}</p>` : ""}
-      ${links.length ? `<div class="links">${links.join("")}</div>` : ""}
+      ${year}
+      <h3>${escapeHTML(title)}</h3>
+      ${artist ? `<div class="meta">${escapeHTML(artist)}</div>` : ""}
+      ${item.role ? `<span class="tag">${escapeHTML(item.role)}</span>` : ""}
+      ${item.description ? `<p>${stripMarkdown(String(item.description)).slice(0,180)}</p>` : ""}
+      ${kind === "song" && item.youtube ? `<a class="tag" href="${escapeAttr(item.youtube)}" target="_blank" rel="noopener">YouTube ↗</a>` : ""}
     </div>
   </article>`;
 }
-async function loadDir(path){
-  // Cloudflare Pages serves static files, so the browser cannot list a directory.
-  // Keep a small manifest file generated from the content folder.
-  const r=await fetch(path+"/index.json");
-  if(!r.ok) return [];
-  return r.json();
-}
-(async()=>{
-  try{
-    const site=await loadJSON("data/site.json");
-    document.title=site.title || "Kaisutee Portfolio";
-    heroName.textContent=site.name||"Kaisutee";
-    heroTagline.textContent=site.tagline||"";
-    heroBio.textContent=site.bio||"";
-    aboutBio.textContent=site.bio||"";
-    if(site.email){
-      emailLink.href="mailto:"+site.email;
-      emailLink.textContent=site.email;
-    }else{emailLink.style.display="none";}
-    const s=site.social||{};
-    socials.innerHTML=[["Facebook",s.facebook],["Instagram",s.instagram],["YouTube",s.youtube]]
-      .filter(x=>x[1]).map(x=>`<a href="${esc(x[1])}" target="_blank" rel="noopener">${x[0]}</a>`).join("");
-    year.textContent=new Date().getFullYear();
 
-    const [music,works]=await Promise.all([loadDir("content/music"),loadDir("content/works")]);
-    musicGrid.innerHTML=music.length?music.map(x=>card(x,"music")).join(""):`<div class="empty">ยังไม่มีรายการเพลง</div>`;
-    worksGrid.innerHTML=works.length?works.map(x=>card(x,"works")).join(""):`<div class="empty">ยังไม่มีผลงาน</div>`;
-  }catch(e){
-    console.error(e);
-    musicGrid.innerHTML=`<div class="empty">ไม่สามารถโหลดข้อมูลผลงานได้</div>`;
-    worksGrid.innerHTML=`<div class="empty">ไม่สามารถโหลดข้อมูลผลงานได้</div>`;
+function escapeHTML(s) {
+  return s.replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[c]));
+}
+function escapeAttr(s) { return escapeHTML(s); }
+function stripMarkdown(s) { return s.replace(/[#*_`>]/g,"").replace(/\[([^\]]+)\]\([^)]+\)/g,"$1"); }
+
+async function initCatalog() {
+  const container = $("#cards");
+  if (!container) return;
+  const dir = container.dataset.dir;
+  const kind = container.dataset.kind || "";
+  const items = await loadCollection(dir);
+  if (!items.length) {
+    container.innerHTML = `<div class="empty">No entries yet. Add content in Pages CMS.</div>`;
+    return;
   }
-})();
+  container.innerHTML = items.sort((a,b)=>(b.year||0)-(a.year||0)).map(x => card(x, kind)).join("");
+  const search = $("#search");
+  if (search) search.addEventListener("input", () => {
+    const q = search.value.toLowerCase();
+    [...container.children].forEach(el => el.style.display = el.textContent.toLowerCase().includes(q) ? "" : "none");
+  });
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  await initSite();
+  await initCatalog();
+});
